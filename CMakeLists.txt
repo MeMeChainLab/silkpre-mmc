@@ -53,7 +53,7 @@ find_path(GMP_INCLUDE_DIR gmp.h
     REQUIRED
 )
 find_library(GMP_LIBRARY NAMES gmp
-    PATHS /usr/local/lib /usr/lib /opt/local/lib /usr/local/gmp
+    PATHS /usr/local/lib /usr/lib /opt/local/lib /usr/local/gmp/lib
     HINTS ${GMP_ROOT}/lib
     REQUIRED
 )
