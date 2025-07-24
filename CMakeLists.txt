@@ -45,9 +45,18 @@ project(silkpre)
 
 
 # GMP
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-set(GMP_INCLUDE_DIR "/usr/local/gmp/include")
-set(GMP_LIBRARY "/usr/local/gmp/lib/libgmp.a")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")	
+
+find_path(GMP_INCLUDE_DIR gmp.h
+    PATHS /usr/local/include /usr/include /opt/local/include /usr/local/gmp
+    HINTS ${GMP_ROOT}/include
+    REQUIRED
+)
+find_library(GMP_LIBRARY NAMES gmp
+    PATHS /usr/local/lib /usr/lib /opt/local/lib /usr/local/gmp
+    HINTS ${GMP_ROOT}/lib
+    REQUIRED
+)
 
 if(NOT EXISTS ${GMP_INCLUDE_DIR})
   message(FATAL_ERROR "GMP include directory does not exist: ${GMP_INCLUDE_DIR}")
@@ -59,12 +68,18 @@ endif()
 
 message(STATUS "Using manually set GMP library: ${GMP_LIBRARY}")
 
+if(GMP_INCLUDE_DIR AND GMP_LIBRARY)
 add_library(gmp STATIC IMPORTED)
 set_target_properties(
     gmp PROPERTIES
     IMPORTED_LOCATION ${GMP_LIBRARY}
     INTERFACE_INCLUDE_DIRECTORIES ${GMP_INCLUDE_DIR}
 )
+endif()
+
+
+
+
 
 # secp256k1
 add_library(secp256k1 third_party/secp256k1/src/secp256k1.c)
